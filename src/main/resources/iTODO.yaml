@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: Spring Boot Application API
+  version: 1.0.0
+servers:
+  - description: Local Server
+    url: http://localhost:8080
+paths:
+  /home/login:
+    post:
+      summary: Login a user
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username or email address for login
+                password:
+                  type: string
+                  description: User's password
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Authorization:
+              schema:
+                type: string
+                description: token for authorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Login success message
+        '401':
+          description: Unauthorized login attempt
+  /home/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username for registration
+                email:
+                  type: string
+                  description: User's email address for registration
+                password:
+                  type: string
+                  description: User's password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Registration success message
+        '400':
+          description: Bad request (e.g., username or email already exists)
+  /todolist/{id}:
+    get:
+      tags:
+        - todolist
+      summary: Get a todo item
+      operationId: getTodoById
+      parameters:
+        - name: id
+          description: todo id
+          schema:
+            type: integer
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Todo item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+        '404':
+          description: Todo item not found
+  /todolist:
+    get:
+      tags:
+        - todolist
+      summary: Get all todo items
+      operationId: getAllTodo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoItem'
+    post:
+      tags:
+        - todolist
+      summary: Add a todo item
+      operationId: addTodoItem
+      requestBody:
+        description: Todo item to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoItem'
+      responses:
+        '200':
+          description: OK if todo item is added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the created todo item
+        '400':
+          description: Bad Request
+
+    put:
+      tags:
+        - todolist
+      summary: Update a todo item
+      operationId: updateTodoItem
+      requestBody:
+        description: Todo item to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoItem'
+      responses:
+        '200':
+          description: OK if todo item is added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the created todo item
+        '400':
+          description: Bad Request
+
+  /todolist/delete/{id}:
+    get:
+      tags:
+        - todolist
+      summary: Delete a todo item (using GET, not ideal)
+      operationId: deleteTodoItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the todo item to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK if todo item is deleted successfully
+        '400':
+          description: Bad Request
+
+
+
+components:
+  schemas:
+    UserCredentials:
+      description: User's credentials
+      type: object
+      properties:
+        username:
+          type: string
+          description: User's username
+        email:
+          type: string
+          description: User's email
+        password:
+          type: string
+          description: User's password
+    SecUser:
+      description: User
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Todo item ID
+        username:
+          type: string
+          description: User's username
+        email:
+          type: string
+          description: User's email
+        password:
+          type: string
+          description: User's password
+        session:
+          type: string
+          description: Session ID
+    TodoItem:
+      description: Todo item
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Todo item ID
+        itemDescription:
+          type: string
+          description: Todo item description
+        status:
+          type: string
+          description: Todo item status
+        user:
+          type: string
+          description: owner of to do item
