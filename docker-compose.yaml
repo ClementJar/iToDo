@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "8080:8080"
+  db:
+    build:
+      context: .
+      dockerfile: DockerFile.db
+    ports:
+      - "1433:1433"

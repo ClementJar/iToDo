@@ -1,3 +1,10 @@
+CREATE DATABASE [TODODB]
+GO
+
+USE [TODODB];
+GO
+
+
 CREATE TABLE sec_user_entity
 (
     id       int IDENTITY (1, 1) NOT NULL,
