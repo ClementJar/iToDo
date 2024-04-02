@@ -17,8 +17,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfiguration {
-    @Autowired
-    private MyUserDetailsService userService;
+    private final MyUserDetailsService userService;
+
+    public SecurityConfiguration(MyUserDetailsService userService) {
+        this.userService = userService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
